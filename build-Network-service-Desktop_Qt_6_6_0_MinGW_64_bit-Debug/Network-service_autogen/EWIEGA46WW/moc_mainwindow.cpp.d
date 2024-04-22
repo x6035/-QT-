@@ -138,7 +138,9 @@ F:/NetworkP-InfoSecu/Network-service-monitoring-system/build-Network-service-Des
   E:/Qt/6.6.0/mingw_64/include/QtGui/qtransform.h \
   E:/Qt/6.6.0/mingw_64/include/QtGui/qwindowdefs.h \
   E:/Qt/6.6.0/mingw_64/include/QtGui/qwindowdefs_win.h \
+  E:/Qt/6.6.0/mingw_64/include/QtWidgets/QDialog \
   E:/Qt/6.6.0/mingw_64/include/QtWidgets/QMainWindow \
+  E:/Qt/6.6.0/mingw_64/include/QtWidgets/qdialog.h \
   E:/Qt/6.6.0/mingw_64/include/QtWidgets/qmainwindow.h \
   E:/Qt/6.6.0/mingw_64/include/QtWidgets/qsizepolicy.h \
   E:/Qt/6.6.0/mingw_64/include/QtWidgets/qtabwidget.h \
@@ -344,4 +346,5 @@ F:/NetworkP-InfoSecu/Network-service-monitoring-system/build-Network-service-Des
   E:/Qt/Tools/mingw1120_64/x86_64-w64-mingw32/include/sys/types.h \
   E:/Qt/Tools/mingw1120_64/x86_64-w64-mingw32/include/time.h \
   E:/Qt/Tools/mingw1120_64/x86_64-w64-mingw32/include/vadefs.h \
-  E:/Qt/Tools/mingw1120_64/x86_64-w64-mingw32/include/wchar.h
+  E:/Qt/Tools/mingw1120_64/x86_64-w64-mingw32/include/wchar.h \
+  F:/NetworkP-InfoSecu/Network-service-monitoring-system/Network-service/dialog_function.h

@@ -256,9 +256,9 @@
 	"HEADERS" : 
 	[
 		[
-			"F:/NetworkP-InfoSecu/Network-service-monitoring-system/Network-service/dialog_fuction.h",
+			"F:/NetworkP-InfoSecu/Network-service-monitoring-system/Network-service/dialog_function.h",
 			"MU",
-			"EWIEGA46WW/moc_dialog_fuction.cpp",
+			"EWIEGA46WW/moc_dialog_function.cpp",
 			null
 		],
 		[
@@ -338,7 +338,7 @@
 	"SOURCES" : 
 	[
 		[
-			"F:/NetworkP-InfoSecu/Network-service-monitoring-system/Network-service/dialog_fuction.cpp",
+			"F:/NetworkP-InfoSecu/Network-service-monitoring-system/Network-service/dialog_function.cpp",
 			"MU",
 			null
 		],
