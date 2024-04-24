@@ -2,6 +2,7 @@
 #define DIALOG_FUNCTION_H
 
 #include <QDialog>
+#include "Dialog_config.h"
 
 namespace Ui {
 class Dialog_function;
@@ -17,10 +18,13 @@ public:
 
 private slots:
 
-    void on_pushButton_clicked();
+    void on_btn_back_clicked();
+
+    void on_btn_config_clicked();
 
 private:
     Ui::Dialog_function *ui;
+    Dialog_config dialog_config;
 
 signals:
     void closeButtonClicked();

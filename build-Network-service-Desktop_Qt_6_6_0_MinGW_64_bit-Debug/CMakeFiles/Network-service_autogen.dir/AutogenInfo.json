@@ -256,6 +256,12 @@
 	"HEADERS" : 
 	[
 		[
+			"F:/NetworkP-InfoSecu/Network-service-monitoring-system/Network-service/dialog_config.h",
+			"MU",
+			"EWIEGA46WW/moc_dialog_config.cpp",
+			null
+		],
+		[
 			"F:/NetworkP-InfoSecu/Network-service-monitoring-system/Network-service/dialog_function.h",
 			"MU",
 			"EWIEGA46WW/moc_dialog_function.cpp",
@@ -337,6 +343,11 @@
 	"SETTINGS_FILE" : "F:/NetworkP-InfoSecu/Network-service-monitoring-system/build-Network-service-Desktop_Qt_6_6_0_MinGW_64_bit-Debug/CMakeFiles/Network-service_autogen.dir/AutogenUsed.txt",
 	"SOURCES" : 
 	[
+		[
+			"F:/NetworkP-InfoSecu/Network-service-monitoring-system/Network-service/dialog_config.cpp",
+			"MU",
+			null
+		],
 		[
 			"F:/NetworkP-InfoSecu/Network-service-monitoring-system/Network-service/dialog_function.cpp",
 			"MU",

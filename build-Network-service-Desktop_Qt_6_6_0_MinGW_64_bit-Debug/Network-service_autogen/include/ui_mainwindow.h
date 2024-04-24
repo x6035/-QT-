@@ -10,10 +10,13 @@
 #define UI_MAINWINDOW_H
 
 #include <QtCore/QVariant>
+#include <QtGui/QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QGridLayout>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QMainWindow>
+#include <QtWidgets/QMenu>
+#include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QSpacerItem>
 #include <QtWidgets/QVBoxLayout>
@@ -32,6 +35,9 @@ public:
     QPushButton *btn_enter;
     QSpacerItem *verticalSpacer_2;
     QPushButton *btn_close;
+    QMenuBar *menuBar;
+    QMenu *menu;
+    QMenu *menu_2;
 
     void setupUi(QMainWindow *MainWindow)
     {
@@ -75,6 +81,18 @@ public:
         gridLayout->addLayout(verticalLayout, 0, 0, 1, 1);
 
         MainWindow->setCentralWidget(centralwidget);
+        menuBar = new QMenuBar(MainWindow);
+        menuBar->setObjectName("menuBar");
+        menuBar->setGeometry(QRect(0, 0, 375, 21));
+        menu = new QMenu(menuBar);
+        menu->setObjectName("menu");
+        menu_2 = new QMenu(menuBar);
+        menu_2->setObjectName("menu_2");
+        MainWindow->setMenuBar(menuBar);
+
+        menuBar->addAction(menu->menuAction());
+        menuBar->addAction(menu_2->menuAction());
+        menu->addSeparator();
 
         retranslateUi(MainWindow);
 
@@ -87,6 +105,8 @@ public:
         label->setText(QCoreApplication::translate("MainWindow", "\347\275\221\347\273\234\346\234\215\345\212\241\347\233\221\346\265\213\347\263\273\347\273\237", nullptr));
         btn_enter->setText(QCoreApplication::translate("MainWindow", "\350\277\233\345\205\245\347\263\273\347\273\237", nullptr));
         btn_close->setText(QCoreApplication::translate("MainWindow", "\345\205\263\351\227\255\350\275\257\344\273\266", nullptr));
+        menu->setTitle(QCoreApplication::translate("MainWindow", "\344\275\277\347\224\250\350\257\264\346\230\216", nullptr));
+        menu_2->setTitle(QCoreApplication::translate("MainWindow", "\345\205\263\344\272\216", nullptr));
     } // retranslateUi
 
 };
