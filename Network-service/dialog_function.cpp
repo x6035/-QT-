@@ -143,3 +143,9 @@ void Dialog_function::on_btn_config_clicked()
     dialog_config.show();
 }
 
+
+void Dialog_function::on_btn_start_clicked()
+{
+    //先获得配置文件config.ini里的和界面填写的参数
+}
+

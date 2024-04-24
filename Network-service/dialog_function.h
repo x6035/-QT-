@@ -22,6 +22,8 @@ private slots:
 
     void on_btn_config_clicked();
 
+    void on_btn_start_clicked();
+
 private:
     Ui::Dialog_function *ui;
     Dialog_config dialog_config;

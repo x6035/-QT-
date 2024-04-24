@@ -82,6 +82,9 @@
      <item>
       <widget class="QLineEdit" name="edit_ip">
        <property name="text">
+        <string/>
+       </property>
+       <property name="placeholderText">
         <string>输入目标主机IP</string>
        </property>
       </widget>
@@ -89,6 +92,9 @@
      <item>
       <widget class="QLineEdit" name="edit_port">
        <property name="text">
+        <string/>
+       </property>
+       <property name="placeholderText">
         <string>输入目标服务PORT</string>
        </property>
       </widget>

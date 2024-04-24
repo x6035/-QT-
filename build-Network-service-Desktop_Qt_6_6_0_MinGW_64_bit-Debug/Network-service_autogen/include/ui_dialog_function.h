@@ -123,8 +123,10 @@ public:
         comboBox->setItemText(2, QCoreApplication::translate("Dialog_function", "smtp", nullptr));
 
         btn_back->setText(QCoreApplication::translate("Dialog_function", "\350\277\224\345\233\236", nullptr));
-        edit_ip->setText(QCoreApplication::translate("Dialog_function", "\350\276\223\345\205\245\347\233\256\346\240\207\344\270\273\346\234\272IP", nullptr));
-        edit_port->setText(QCoreApplication::translate("Dialog_function", "\350\276\223\345\205\245\347\233\256\346\240\207\346\234\215\345\212\241PORT", nullptr));
+        edit_ip->setText(QString());
+        edit_ip->setPlaceholderText(QCoreApplication::translate("Dialog_function", "\350\276\223\345\205\245\347\233\256\346\240\207\344\270\273\346\234\272IP", nullptr));
+        edit_port->setText(QString());
+        edit_port->setPlaceholderText(QCoreApplication::translate("Dialog_function", "\350\276\223\345\205\245\347\233\256\346\240\207\346\234\215\345\212\241PORT", nullptr));
         btn_start->setText(QCoreApplication::translate("Dialog_function", "\345\274\200\345\247\213\347\233\221\346\265\213", nullptr));
         label->setText(QCoreApplication::translate("Dialog_function", "\345\212\237\350\203\275\347\225\214\351\235\242", nullptr));
     } // retranslateUi

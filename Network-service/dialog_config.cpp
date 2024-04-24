@@ -18,6 +18,7 @@ Dialog_config::~Dialog_config()
     delete ui;
 }
 
+//两个下拉框
 void Dialog_config::on_CB_mail_stateChanged()
 {
     this->ui->edit_mail->setEnabled(ui->CB_mail->isChecked());
@@ -89,7 +90,7 @@ void Dialog_config::on_btn_CancelConfig_clicked()
 void Dialog_config::on_pushButton_clicked()
 {
         // 打开文件对话框
-        QString filePath = QFileDialog::getExistingDirectory(nullptr, "选择文件所在文件夹", QDir::homePath());
+        QString filePath = QFileDialog::getExistingDirectory(nullptr, "选择配置文件存放的路径", QDir::homePath());
         // 在此处可以对选择的文件路径进行处理
         if (!filePath.isEmpty()) {
             qDebug() << "选择的文件路径为:" << filePath;
