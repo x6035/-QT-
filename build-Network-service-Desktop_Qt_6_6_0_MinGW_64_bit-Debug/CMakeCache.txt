@@ -14,6 +14,9 @@
 # EXTERNAL cache entries
 ########################
 
+//No help, variable specified on the command line.
+<未设定>:PATH=<未设定>
+
 //Path to a program.
 CMAKE_ADDR2LINE:FILEPATH=E:/Qt/Tools/mingw1120_64/bin/addr2line.exe
 
