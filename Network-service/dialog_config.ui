@@ -14,40 +14,10 @@
    <string>Dialog</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="4" column="0">
-    <widget class="QCheckBox" name="CB_phone">
-     <property name="text">
-      <string>短信报警</string>
-     </property>
-     <property name="checked">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
    <item row="2" column="2">
-    <widget class="QPushButton" name="pushButton">
+    <widget class="QPushButton" name="btn_opendir">
      <property name="text">
       <string>选择路径</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="1">
-    <widget class="QLineEdit" name="edit_mail">
-     <property name="text">
-      <string/>
-     </property>
-     <property name="placeholderText">
-      <string>填写邮箱地址</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="0" colspan="3">
-    <widget class="QLabel" name="label">
-     <property name="text">
-      <string>配置填写</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
      </property>
     </widget>
    </item>
@@ -61,16 +31,6 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="0" colspan="3">
-    <widget class="QLabel" name="label_2">
-     <property name="text">
-      <string>注意：请至少选择一种报警方式</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
-   </item>
    <item row="3" column="0">
     <widget class="QCheckBox" name="CB_mail">
      <property name="text">
@@ -81,17 +41,17 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="1">
-    <widget class="QLineEdit" name="edit_configpath">
+   <item row="0" column="0" colspan="3">
+    <widget class="QLabel" name="label">
      <property name="text">
-      <string/>
+      <string>配置填写</string>
      </property>
-     <property name="placeholderText">
-      <string>填写或选择日志路径</string>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
      </property>
     </widget>
    </item>
-   <item row="5" column="1">
+   <item row="6" column="1">
     <spacer name="verticalSpacer">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
@@ -104,17 +64,64 @@
      </property>
     </spacer>
    </item>
-   <item row="7" column="0">
+   <item row="8" column="2">
+    <widget class="QPushButton" name="btn_CancelConfig">
+     <property name="text">
+      <string>取消</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0" colspan="3">
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>注意：请至少选择一种报警方式</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0">
+    <widget class="QCheckBox" name="CB_phone">
+     <property name="text">
+      <string>短信报警</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="1">
+    <widget class="QLineEdit" name="edit_appcode">
+     <property name="placeholderText">
+      <string>填写阿里云AppCode</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="QLineEdit" name="edit_mail">
+     <property name="text">
+      <string/>
+     </property>
+     <property name="placeholderText">
+      <string>填写邮箱地址</string>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="0">
     <widget class="QPushButton" name="btn_saveconfig">
      <property name="text">
       <string>保存</string>
      </property>
     </widget>
    </item>
-   <item row="7" column="2">
-    <widget class="QPushButton" name="btn_CancelConfig">
+   <item row="2" column="1">
+    <widget class="QLineEdit" name="edit_configpath">
      <property name="text">
-      <string>取消</string>
+      <string/>
+     </property>
+     <property name="placeholderText">
+      <string>填写或选择日志路径</string>
      </property>
     </widget>
    </item>

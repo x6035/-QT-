@@ -30,7 +30,9 @@ private slots:
     void on_btn_CancelConfig_clicked();
     void on_CB_phone_stateChanged();
 
-    void on_pushButton_clicked();
+    void on_CB_phone_stateChanged(int arg1);
+
+    void on_btn_opendir_clicked();
 
 private:
     Ui::Dialog_config *ui;

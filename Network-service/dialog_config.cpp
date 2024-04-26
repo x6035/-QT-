@@ -1,6 +1,8 @@
 #include "dialog_config.h"
 #include "ui_dialog_config.h"
 
+
+
 Dialog_config::Dialog_config(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::Dialog_config)
@@ -8,9 +10,10 @@ Dialog_config::Dialog_config(QWidget *parent) :
     ui->setupUi(this);
     //保存配置到根目录下的ini文件
     this->settings = new QSettings("config.ini", QSettings::IniFormat);
-    ui->edit_configpath->setText(settings->value("ConfigPath").toString());
+    ui->edit_configpath->setText(settings->value("LogConfigPath").toString());
     ui->edit_mail->setText(settings->value("EmailAddress").toString());
     ui->edit_phone->setText(settings->value("PhoneNumber").toString());
+    ui->edit_appcode->setText(settings->value("AppCode").toString());
 }
 
 Dialog_config::~Dialog_config()
@@ -28,6 +31,7 @@ void Dialog_config::on_CB_mail_stateChanged()
 void Dialog_config::on_CB_phone_stateChanged()
 {
     this->ui->edit_phone->setEnabled(ui->CB_phone->isChecked());
+    this->ui->edit_appcode->setEnabled(ui->CB_phone->isChecked());
 
 }
 
@@ -56,20 +60,26 @@ void Dialog_config::on_btn_saveconfig_clicked()
         if(!phoneRegex.match(ui->edit_phone->text()).hasMatch()){
 //            qDebug()<<"手机号有误！";
         QMessageBox::critical(this, "错误", "手机号有误！");
+        }
+
+        if(ui->edit_phone->text().isEmpty()){
+//            qDebug()<<"AppCode为空！";
+        QMessageBox::critical(this, "错误", "AppCode为空！");
         flag_correct = false;
         }
     }
 
     QString configPath = ui->edit_configpath->text();
     if (configPath.isEmpty() || !QDir(configPath).exists()) {
-        QMessageBox::critical(this, "错误", "配置路径无效，请输入有效路径！");
+        QMessageBox::critical(this, "错误", "日志配置路径无效，请输入有效路径！");
         flag_correct = false;
     }
 
     if(flag_correct){
-        this->settings->setValue("ConfigPath", configPath);
+        this->settings->setValue("LogConfigPath", configPath);
         this->settings->setValue("PhoneNumber", ui->edit_phone->text());
         this->settings->setValue("EmailAddress", ui->edit_mail->text());
+        this->settings->setValue("AppCode", ui->edit_appcode->text());
 
 //        qDebug()<<"配置保存成功！";
         QMessageBox::information(this, "提示", "配置保存成功！");
@@ -87,14 +97,15 @@ void Dialog_config::on_btn_CancelConfig_clicked()
 }
 
 
-void Dialog_config::on_pushButton_clicked()
+
+void Dialog_config::on_btn_opendir_clicked()
 {
-        // 打开文件对话框
-        QString filePath = QFileDialog::getExistingDirectory(nullptr, "选择配置文件存放的路径", QDir::homePath());
-        // 在此处可以对选择的文件路径进行处理
-        if (!filePath.isEmpty()) {
-            qDebug() << "选择的文件路径为:" << filePath;
-        }
-        ui->edit_configpath->setText(filePath);
+    // 打开文件对话框
+    QString filePath = QFileDialog::getExistingDirectory(nullptr, "选择日志配置文件存放的路径", QDir::homePath());
+    // 在此处可以对选择的文件路径进行处理
+    if (!filePath.isEmpty()) {
+        qDebug() << "选择的文件路径为:" << filePath;
+    }
+    ui->edit_configpath->setText(filePath);
 }
 

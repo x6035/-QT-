@@ -1,9 +1,0 @@
-F:/NetworkP-InfoSecu/Network-service-monitoring-system/build-Network-service-Desktop_Qt_6_6_0_MinGW_64_bit-Debug/CMakeFiles/Network-service.dir
-F:/NetworkP-InfoSecu/Network-service-monitoring-system/build-Network-service-Desktop_Qt_6_6_0_MinGW_64_bit-Debug/CMakeFiles/edit_cache.dir
-F:/NetworkP-InfoSecu/Network-service-monitoring-system/build-Network-service-Desktop_Qt_6_6_0_MinGW_64_bit-Debug/CMakeFiles/rebuild_cache.dir
-F:/NetworkP-InfoSecu/Network-service-monitoring-system/build-Network-service-Desktop_Qt_6_6_0_MinGW_64_bit-Debug/CMakeFiles/list_install_components.dir
-F:/NetworkP-InfoSecu/Network-service-monitoring-system/build-Network-service-Desktop_Qt_6_6_0_MinGW_64_bit-Debug/CMakeFiles/install.dir
-F:/NetworkP-InfoSecu/Network-service-monitoring-system/build-Network-service-Desktop_Qt_6_6_0_MinGW_64_bit-Debug/CMakeFiles/install/local.dir
-F:/NetworkP-InfoSecu/Network-service-monitoring-system/build-Network-service-Desktop_Qt_6_6_0_MinGW_64_bit-Debug/CMakeFiles/install/strip.dir
-F:/NetworkP-InfoSecu/Network-service-monitoring-system/build-Network-service-Desktop_Qt_6_6_0_MinGW_64_bit-Debug/CMakeFiles/Network-service_autogen_timestamp_deps.dir
-F:/NetworkP-InfoSecu/Network-service-monitoring-system/build-Network-service-Desktop_Qt_6_6_0_MinGW_64_bit-Debug/CMakeFiles/Network-service_autogen.dir

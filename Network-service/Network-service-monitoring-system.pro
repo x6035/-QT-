@@ -1,6 +1,4 @@
-QT       += core gui
-
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+QT       += core gui network widgets
 
 CONFIG += c++17
 
@@ -17,7 +15,6 @@ SOURCES += \
 HEADERS += \
     dialog_config.h \
     dialog_function.h \
-    mainwindow.h \
     mainwindow.h
 
 FORMS += \
@@ -29,3 +26,10 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+DISTFILES += \
+    printtest.py
+
+INCLUDEPATH += E:\dev\anaconda3\envs\py3109\include
+
+LIBS += -LE:\dev\anaconda3\envs\py3109\libs -lpython310
