@@ -1,4 +1,5 @@
-QT       += core gui network widgets
+QT       += core gui network widgets sql
+
 
 CONFIG += c++17
 
@@ -7,29 +8,23 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    dialog_config.cpp \
-    dialog_function.cpp \
+    loghistory.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    servicemonitor.cpp \
+    zsmtp.cpp
 
 HEADERS += \
-    dialog_config.h \
-    dialog_function.h \
-    mainwindow.h
+    loghistory.h \
+    mainwindow.h \
+    servicemonitor.h \
+    zsmtp.h
 
 FORMS += \
-    dialog_config.ui \
-    dialog_function.ui \
+    loghistory.ui \
     mainwindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
-
-DISTFILES += \
-    printtest.py
-
-INCLUDEPATH += E:\dev\anaconda3\envs\py3109\include
-
-LIBS += -LE:\dev\anaconda3\envs\py3109\libs -lpython310
