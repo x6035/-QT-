@@ -11,12 +11,13 @@ void ServiceMonitor::sendEmail()
                     settings.value("SendEmailPwd").toString(),
                     settings.value("ReceiveEmailAddress").toString(),
                     "警告", "服务终止！");  //qq邮箱需要授权码 自己设置
-    QMessageBox::information(m_creator, "警报", "服务异常，已向邮箱发送邮件！");
+//    QMessageBox::information(m_creator, "警报", "服务异常，已向邮箱发送邮件！");
 }
 
  //发短信代码
 void ServiceMonitor::sendSMSNotification() {
 
+    QNetworkAccessManager manager;
     QSettings settings("config.ini", QSettings::IniFormat);
 
     // 读取"appcode"对应的值
@@ -26,8 +27,6 @@ void ServiceMonitor::sendSMSNotification() {
     // 设置请求参数
 
     QString content = "%E3%80%90%E7%BD%91%E7%BB%9C%E6%9C%8D%E5%8A%A1%E7%9B%91%E6%B5%8B%E7%B3%BB%E7%BB%9F%E3%80%91%E8%AD%A6%E6%8A%A5%EF%BC%9A%E6%82%A8%E6%89%80%E7%9B%91%E6%B5%8B%E7%9A%84%E6%9C%8D%E5%8A%A1%E5%87%BA%E7%8E%B0%E5%BC%82%E5%B8%B8%EF%BC%81"; // 替换为您要发送的短信内容
-
-
 
     // 构造请求URL
     QUrl url("https://zwp.market.alicloudapi.com/sms/sendv2");
@@ -39,12 +38,12 @@ void ServiceMonitor::sendSMSNotification() {
     request.setRawHeader("Authorization", ("APPCODE " + appcode).toUtf8());
 
     // 发送请求并处理响应
-    currentReply = manager->get(request);
+    currentReply = manager.get(request);
 
     // 设置超时定时器
-    int timeoutDuration = 60000; // 5000毫秒（5秒）超时
-    timeoutTimer->setSingleShot(true);
-    timeoutTimer->start(timeoutDuration);
+//    int timeoutDuration = 60000; // 5000毫秒（5秒）超时
+//    timeoutTimer->setSingleShot(true);
+//    timeoutTimer->start(timeoutDuration);
 
     connect(currentReply, &QNetworkReply::finished, this, &ServiceMonitor::handleNetworkReply);
 
@@ -59,7 +58,7 @@ void ServiceMonitor::handleTimeout() {
 
 
 void ServiceMonitor::handleNetworkReply() {
-    timeoutTimer->stop();
+//    timeoutTimer->stop();
 
     if (currentReply->error() == QNetworkReply::NoError) {
          // 解析JSON响应

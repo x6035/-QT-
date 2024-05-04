@@ -24,9 +24,9 @@ public:
     this->port = port;
     this->id = id;
 
-    manager = new QNetworkAccessManager(this);
-    timeoutTimer = new QTimer(this);
-    connect(timeoutTimer, &QTimer::timeout, this, &ServiceMonitor::handleTimeout);
+//    manager = new QNetworkAccessManager(this);
+//    timeoutTimer = new QTimer(this);
+//    connect(timeoutTimer, &QTimer::timeout, this, &ServiceMonitor::handleTimeout);
 
 
     };
@@ -47,8 +47,8 @@ private:
     void sendSMSNotification();
     QWidget *m_creator;
 
-    QNetworkAccessManager *manager;
-    QTimer *timeoutTimer;
+//    QNetworkAccessManager *manager;
+//    QTimer *timeoutTimer;
     QNetworkReply *currentReply;
 
     int choice;
