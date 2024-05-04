@@ -27,13 +27,15 @@ void MainWindow::init()
     {
         monitor_timer[i] = new QTimer;
     }
-
+  ////////
     connect(monitor_timer[0],&QTimer::timeout,this,[this]() {
         startThread(0);
     });
+  ////////
     connect(monitor_timer[1],&QTimer::timeout,this,[this]() {
         startThread(1);
     });
+  ////////
     connect(monitor_timer[2],&QTimer::timeout,this,[this]() {
         startThread(2);
     });
@@ -191,7 +193,7 @@ void MainWindow::on_btn_close_clicked()
 //}
 
 
-void MainWindow::on_CB_mail_stateChanged(int arg1)
+void MainWindow::on_CB_mail_stateChanged()
 {
     ui->edit_mail->setEnabled(ui->CB_mail->isChecked());
     ui->edit_mail_send->setEnabled(ui->CB_mail->isChecked());
@@ -199,7 +201,7 @@ void MainWindow::on_CB_mail_stateChanged(int arg1)
 }
 
 
-void MainWindow::on_CB_phone_stateChanged(int arg1)
+void MainWindow::on_CB_phone_stateChanged()
 {
     ui->edit_phone->setEnabled(ui->CB_phone->isChecked());
     ui->edit_appcode->setEnabled(ui->CB_phone->isChecked());
@@ -224,7 +226,6 @@ void MainWindow::on_btn_new_task_clicked()
                                             i,
                                             ui->CB_mail->isEnabled(),
                                             ui->CB_phone->isEnabled());
-
             switch (i) {
             case 0:
                 ui->task1_disp->setText("");
@@ -238,6 +239,8 @@ void MainWindow::on_btn_new_task_clicked()
             }
 
             connect(monitor[i], SIGNAL(send_data(QString)), this, SLOT(log_display_updata(QString)));
+            connect(monitor[i], SIGNAL(SendNotification(QString,int)),
+                    this, SLOT(displayNotification(QString,int)), Qt::QueuedConnection);
             switch (i) {
             case 0:
                 connect(monitor[i], SIGNAL(end_monitor()), this, SLOT(on_end_task1_clicked()));
@@ -308,6 +311,14 @@ void MainWindow::log_display_updata(QString data)
     }
     updata_database(data);
 
+}
+
+void MainWindow::displayNotification(QString message,int typ){
+    //typ:1=info,0=critical
+    if(typ)
+        QMessageBox::information(this,"警报",message);
+    else
+        QMessageBox::critical(this, "错误", message);
 }
 
 //数据库初始化

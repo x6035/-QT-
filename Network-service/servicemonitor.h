@@ -26,11 +26,6 @@ public:
     this->flag_email = flag_email;
     this->flag_phone = flag_phone;
 
-//    manager = new QNetworkAccessManager(this);
-//    timeoutTimer = new QTimer(this);
-//    connect(timeoutTimer, &QTimer::timeout, this, &ServiceMonitor::handleTimeout);
-
-
     };
     QWidget *creator() const {
         return m_creator;
@@ -40,6 +35,8 @@ public:
 signals:
     void end_monitor();
     void send_data(QString log);
+    //typ:1警报，2：提示
+    void SendNotification(QString,int typ);
 
 private:
     QRegularExpression serviceInterruptionRegex;
@@ -49,8 +46,8 @@ private:
     void sendSMSNotification();
     QWidget *m_creator;
 
-//    QNetworkAccessManager *manager;
-//    QTimer *timeoutTimer;
+    QNetworkAccessManager *manager;
+    QTimer *timeoutTimer;
     QNetworkReply *currentReply;
 
     int choice;
@@ -67,7 +64,7 @@ private:
 
 
 private slots:
-    void handleTimeout();
+//    void handleTimeout();
     void handleNetworkReply();
 };
 

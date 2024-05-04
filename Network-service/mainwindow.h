@@ -46,9 +46,9 @@ private slots:
 
 //    void on_pushButton_clicked();
 
-    void on_CB_mail_stateChanged(int arg1);
+    void on_CB_mail_stateChanged();
 
-    void on_CB_phone_stateChanged(int arg1);
+    void on_CB_phone_stateChanged();
 
     void on_btn_new_task_clicked();
 
@@ -63,6 +63,8 @@ private slots:
     void on_btn_openlog_clicked();
 
     void log_display_updata(QString data);
+
+    void displayNotification(QString,int);
 
 private:
     void init();

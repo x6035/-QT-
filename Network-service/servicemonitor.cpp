@@ -10,14 +10,14 @@ void ServiceMonitor::sendEmail()
     smtp->sendEmail(settings.value("SendEmailAddress").toString(),
                     settings.value("SendEmailPwd").toString(),
                     settings.value("ReceiveEmailAddress").toString(),
-                    "警告", "服务终止！");  //qq邮箱需要授权码 自己设置
-//    QMessageBox::information(m_creator, "警报", "服务异常，已向邮箱发送邮件！");
+                    "警告", "您所监测的服务终止！");  //qq邮箱需要授权码 自己设置
+    emit SendNotification("您所监测的服务异常，已向邮箱发送邮件！",1);
+//    qDebug() << "您所监测的服务异常，已向邮箱发送邮件！";
 }
 
  //发短信代码
 void ServiceMonitor::sendSMSNotification() {
 
-    QNetworkAccessManager manager;
     QSettings settings("config.ini", QSettings::IniFormat);
 
     // 读取"appcode"对应的值
@@ -38,27 +38,43 @@ void ServiceMonitor::sendSMSNotification() {
     request.setRawHeader("Authorization", ("APPCODE " + appcode).toUtf8());
 
     // 发送请求并处理响应
-    currentReply = manager.get(request);
+    currentReply = manager->get(request);
 
-    // 设置超时定时器
+    // 创建一个事件循环
+    QEventLoop loop;
+
+    // 创建一个定时器，在40秒后停止事件循环
+    QTimer::singleShot(40000, &loop, &QEventLoop::quit);
+
+    // 连接reply的finished()信号和定时器的超时信号到事件循环的退出槽
+    QObject::connect(currentReply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
+//    QObject::connect(&loop, &QEventLoop::quit, this, &ServiceMonitor::quit);
+
+    // 运行事件循环，阻塞当前线程
+    loop.exec();
+
+    // 当事件循环退出后，检查请求的结果
+    handleNetworkReply();
+    // 清理资源
+    currentReply->deleteLater();
+
+//    //  设置超时定时器
 //    int timeoutDuration = 60000; // 5000毫秒（5秒）超时
 //    timeoutTimer->setSingleShot(true);
 //    timeoutTimer->start(timeoutDuration);
-
-    connect(currentReply, &QNetworkReply::finished, this, &ServiceMonitor::handleNetworkReply);
-
+//    connect(currentReply, &QNetworkReply::finished, this, &ServiceMonitor::handleNetworkReply);
+//    QThread::sleep(60);
 }
 
-void ServiceMonitor::handleTimeout() {
-    if (currentReply->isRunning()) {
-        currentReply->abort();
-        QMessageBox::critical(m_creator, "错误", "请求超时！");
-    }
-}
+//void ServiceMonitor::handleTimeout() {
+//    if (currentReply->isRunning()) {
+//        currentReply->abort();
+//        QMessageBox::critical(m_creator, "错误", "请求超时！");
+//    }
+//}
 
 
 void ServiceMonitor::handleNetworkReply() {
-//    timeoutTimer->stop();
 
     if (currentReply->error() == QNetworkReply::NoError) {
          // 解析JSON响应
@@ -69,10 +85,12 @@ void ServiceMonitor::handleNetworkReply() {
         // 检查响应状态
         int code = jsonObject["error_code"].toInt();
         if (code == 0) {
-            QMessageBox::information(m_creator, "警报", "服务异常，已向手机发送短信！");
+            emit SendNotification("服务异常，已向手机发送短信！",1);
+//            qDebug() << "服务异常，已向手机发送短信！";
         } else {
-            QMessageBox::critical(m_creator, "错误", "短信发送失败，错误码："+ QString::number(code) + '\n' + "错误信息："+\
-                QUrl::fromPercentEncoding(jsonObject["reason"].toString().toUtf8()));
+            qDebug() << "短信发送失败，错误码";
+            emit SendNotification("短信发送失败，错误码："+ QString::number(code) + '\n' + "错误信息："+\
+                QUrl::fromPercentEncoding(jsonObject["reason"].toString().toUtf8()),0);
             }
     }
     currentReply->deleteLater();
@@ -81,7 +99,6 @@ void ServiceMonitor::handleNetworkReply() {
 
 bool ServiceMonitor::testHttp(const QString &ip, quint16 port, int timeoutMs)
 {
-    QNetworkAccessManager manager;
     QNetworkRequest request;
     request.setUrl(QUrl(QString("http://%1:%2").arg(ip).arg(port)));
     request.setRawHeader("Host", (ip + ":" + QString::number(port)).toUtf8());
@@ -89,11 +106,11 @@ bool ServiceMonitor::testHttp(const QString &ip, quint16 port, int timeoutMs)
     QEventLoop loop;
     QTimer timer;
 
-    QObject::connect(&manager, &QNetworkAccessManager::finished, &loop, &QEventLoop::quit);
+    QObject::connect(manager, &QNetworkAccessManager::finished, &loop, &QEventLoop::quit);
     QObject::connect(&timer, &QTimer::timeout, &loop, &QEventLoop::quit);
 
     timer.start(timeoutMs);
-    QNetworkReply *reply = manager.get(request);
+    QNetworkReply *reply = manager->get(request);
     loop.exec();
 
     // 获取HTTP状态码
@@ -139,6 +156,7 @@ bool ServiceMonitor::testSmtp(const QString &ip, quint16 port, int timeoutMs)
 
 void ServiceMonitor::run()
 {
+    manager = new QNetworkAccessManager();
 
     bool flag{false};
     if(choice == 0) {
@@ -169,7 +187,10 @@ void ServiceMonitor::run()
             sendEmail();
 
         if(flag_phone)
+        {
             sendSMSNotification();
+        }
+
 
         emit end_monitor();
     }
