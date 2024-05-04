@@ -17,12 +17,14 @@ class ServiceMonitor : public QThread
 {
     Q_OBJECT
 public:
-    explicit ServiceMonitor(QWidget *creator,int choice,QString ip,QString port,int id):m_creator(creator){
+    explicit ServiceMonitor(QWidget *creator,int choice,QString ip,QString port,int id,bool flag_email,bool flag_phone):m_creator(creator){
 
     this->choice = choice;
     this->ip = ip;
     this->port = port;
     this->id = id;
+    this->flag_email = flag_email;
+    this->flag_phone = flag_phone;
 
 //    manager = new QNetworkAccessManager(this);
 //    timeoutTimer = new QTimer(this);
@@ -54,8 +56,9 @@ private:
     int choice;
     QString ip;
     QString port;
-
     int id;
+    bool flag_phone;
+    bool flag_email;
 
     bool testHttp(const QString &ip, quint16 port, int timeoutMs=3000);
     bool testFtp(const QString &ip, quint16 port, int timeoutMs=3000);

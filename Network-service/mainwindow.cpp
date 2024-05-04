@@ -20,7 +20,7 @@ MainWindow::~MainWindow()
 void MainWindow::init()
 {
     ui->stackedWidget->setCurrentIndex(0);
-    //保存配置到根目录下的ini文件
+    //读取根目录下的ini文件
     m_settings = new QSettings("config.ini", QSettings::IniFormat);
     initConfig();
     for (int i=0;i<3;i++)
@@ -55,7 +55,7 @@ void MainWindow::startThread(int i)
 void MainWindow::initConfig()
 {
 //    ui->edit_databasepath->setText(m_settings->value("DatabasePath").toString());
-    ui->edit_mail->setText(m_settings->value("SendEmailAddress").toString());
+    ui->edit_mail->setText(m_settings->value("ReceiveEmailAddress").toString());
     ui->edit_phone->setText(m_settings->value("PhoneNumber").toString());
     ui->CB_mail->setCheckState(m_settings->value("EmailAddressEnable").toBool()?Qt::Checked:Qt::Unchecked);
     ui->CB_phone->setCheckState(m_settings->value("PhoneNumberEnable").toBool()?Qt::Checked:Qt::Unchecked);
@@ -111,9 +111,10 @@ bool MainWindow::saveConfig()
     m_settings->setValue("AppCode", ui->edit_appcode->text());
     m_settings->setValue("SendEmailAddress", ui->edit_mail_send->text());
     m_settings->setValue("SendEmailPwd", ui->edit_sendmail_pwd->text());
-
+    m_settings->sync();
 
     QMessageBox::information(this, "提示", "配置保存成功！");
+
     ui->stackedWidget->setCurrentIndex(1);
 
     return true;
@@ -219,7 +220,10 @@ void MainWindow::on_btn_new_task_clicked()
         {
             monitor[i] = new ServiceMonitor(this,ui->comboBox->currentIndex(),
                                             ui->edit_ip->text(),
-                                            ui->edit_port->text(),i);
+                                            ui->edit_port->text(),
+                                            i,
+                                            ui->CB_mail->isEnabled(),
+                                            ui->CB_phone->isEnabled());
 
             switch (i) {
             case 0:

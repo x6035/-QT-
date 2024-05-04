@@ -165,9 +165,12 @@ void ServiceMonitor::run()
 
     qDebug()<<flag;
     if(!flag){
+        if(flag_email)
+            sendEmail();
 
-        sendEmail();
-        sendSMSNotification();
+        if(flag_phone)
+            sendSMSNotification();
+
         emit end_monitor();
     }
 }
