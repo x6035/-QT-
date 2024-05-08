@@ -93,11 +93,13 @@ bool MainWindow::saveConfig()
             QMessageBox::critical(this, "错误", "手机号有误！");
             return false;
         }
+        if(ui->edit_phone->text().isEmpty()){
+            QMessageBox::critical(this, "错误", "AppCode为空！");
+            return false;
+        }
     }
 
-    if(ui->edit_phone->text().isEmpty()){
-        QMessageBox::critical(this, "错误", "AppCode为空！");
-    }
+
 
 //    QString configPath = ui->edit_databasepath->text();
 //    if (configPath.isEmpty() || !QDir(configPath).exists()) {
