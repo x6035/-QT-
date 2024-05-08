@@ -4,6 +4,8 @@
 #include <QObject>
 #include <QTcpSocket>
 #include <QDebug>
+#include<QEventLoop>
+#include<QTimer>
 
 #define EMAIL_ERROR     0   //邮件发送失败
 #define EMAIL_SUCCEED   1   //邮件发送成功

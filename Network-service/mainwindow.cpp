@@ -226,8 +226,8 @@ void MainWindow::on_btn_new_task_clicked()
                                             ui->edit_ip->text(),
                                             ui->edit_port->text(),
                                             i,
-                                            ui->CB_mail->isEnabled(),
-                                            ui->CB_phone->isEnabled());
+                                            ui->CB_mail->isChecked(),
+                                            ui->CB_phone->isChecked());
             switch (i) {
             case 0:
                 ui->task1_disp->setText("");
