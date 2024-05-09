@@ -17,7 +17,7 @@ class ServiceMonitor : public QThread
 {
     Q_OBJECT
 public:
-    explicit ServiceMonitor(QWidget *creator,int choice,QString ip,QString port,int id,bool flag_email,bool flag_phone):m_creator(creator){
+    explicit ServiceMonitor(int choice,QString ip,QString port,int id,bool flag_email,bool flag_phone){
 
     this->choice = choice;
     this->ip = ip;
@@ -27,9 +27,7 @@ public:
     this->flag_phone = flag_phone;
 
     };
-    QWidget *creator() const {
-        return m_creator;
-    }
+
     void run();
 
 signals:
@@ -39,12 +37,6 @@ signals:
     void SendNotification(QString,int typ);
 
 private:
-    QRegularExpression serviceInterruptionRegex;
-    QString lastServiceStatus;
-    QString alert;
-
-    void sendSMSNotification();
-    QWidget *m_creator;
 
     QNetworkAccessManager *manager;
     QTimer *timeoutTimer;
@@ -57,6 +49,7 @@ private:
     bool flag_phone;
     bool flag_email;
 
+    void sendSMSNotification();
     bool testHttp(const QString &ip, quint16 port, int timeoutMs=3000);
     bool testFtp(const QString &ip, quint16 port, int timeoutMs=3000);
     bool testSmtp(const QString &ip, quint16 port, int timeoutMs=3000);
@@ -64,7 +57,6 @@ private:
 
 
 private slots:
-//    void handleTimeout();
     void handleNetworkReply();
 };
 

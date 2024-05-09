@@ -79,11 +79,12 @@ private:
     QTimer *monitor_timer[3];
     ServiceMonitor *monitor[3] = {};
     int monitor_check[3] = {0,0,0};
+    LogHistory *loghistory;
 
     void Create_Logdatabase();
     void updata_database(QString data);
 
-    LogHistory *loghistory;
+
 
 
 };

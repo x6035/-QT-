@@ -56,7 +56,6 @@ void MainWindow::startThread(int i)
 
 void MainWindow::initConfig()
 {
-//    ui->edit_databasepath->setText(m_settings->value("DatabasePath").toString());
     ui->edit_mail->setText(m_settings->value("ReceiveEmailAddress").toString());
     ui->edit_phone->setText(m_settings->value("PhoneNumber").toString());
     ui->CB_mail->setCheckState(m_settings->value("EmailAddressEnable").toBool()?Qt::Checked:Qt::Unchecked);
@@ -100,14 +99,6 @@ bool MainWindow::saveConfig()
     }
 
 
-
-//    QString configPath = ui->edit_databasepath->text();
-//    if (configPath.isEmpty() || !QDir(configPath).exists()) {
-//        QMessageBox::critical(this, "错误", "数据库路径无效，请输入有效路径！");
-//        return false;
-//    }
-
-//    m_settings->setValue("DatabasePath", ui->edit_databasepath->text());
     m_settings->setValue("PhoneNumber", ui->edit_phone->text());
     m_settings->setValue("ReceiveEmailAddress", ui->edit_mail->text());
     m_settings->setValue("PhoneNumberEnable", ui->CB_phone->checkState());
@@ -183,18 +174,6 @@ void MainWindow::on_btn_close_clicked()
 }
 
 
-//void MainWindow::on_pushButton_clicked()
-//{
-//    // 打开文件对话框
-//    QString filePath = QFileDialog::getExistingDirectory(nullptr, "选择数据库存放的路径", QDir::homePath());
-//    // 在此处可以对选择的文件路径进行处理
-//    if (!filePath.isEmpty()) {
-//        qDebug() << "选择的路径为:" << filePath;
-//    }
-//    ui->edit_databasepath->setText(filePath);
-//}
-
-
 void MainWindow::on_CB_mail_stateChanged()
 {
     ui->edit_mail->setEnabled(ui->CB_mail->isChecked());
@@ -222,7 +201,7 @@ void MainWindow::on_btn_new_task_clicked()
     {
         if (monitor_check[i] == 0)
         {
-            monitor[i] = new ServiceMonitor(this,ui->comboBox->currentIndex(),
+            monitor[i] = new ServiceMonitor(ui->comboBox->currentIndex(),
                                             ui->edit_ip->text(),
                                             ui->edit_port->text(),
                                             i,
@@ -355,10 +334,10 @@ void MainWindow::updata_database(QString data)
     QString dbPath = "LogHistory.db"; // 数据库文件名
 
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName(dbPath);  // 使用内存数据库，你可以改为你的数据库文件路径
+    db.setDatabaseName(dbPath);  // 使用内存数据库
 
     if (!db.open()) {
-        qDebug() << "无法打开数据库";
+        qDebug() << "Cant open database！";
     }
     QSqlQuery query(db);
 
@@ -370,13 +349,12 @@ void MainWindow::updata_database(QString data)
     query.addBindValue(parts[3]);
     bool flag_insert = query.exec();
 
-    // Check if the query execution was successful
     if (!flag_insert) {
         qDebug() << "Error inserting data into table:" << query.lastError();
         return;
     }
 
-    db.close(); // Close the database connection
+    db.close(); // 关闭数据库连接
 }
 
 //读取数据库
@@ -388,7 +366,7 @@ void MainWindow::on_btn_openlog_clicked()
     db.setDatabaseName(dbPath);  // 数据库文件路径
 
     if (!db.open()) {
-        qDebug() << "无法打开数据库";
+        qDebug() << "Cant open database！";
     }
 
 

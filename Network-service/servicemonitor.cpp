@@ -12,7 +12,7 @@ void ServiceMonitor::sendEmail()
                     settings.value("ReceiveEmailAddress").toString(),
                     "警告", "您所监测的服务终止！");  //qq邮箱需要授权码 自己设置
     emit SendNotification("您所监测的服务异常，已向邮箱发送邮件！",1);
-//    qDebug() << "您所监测的服务异常，已向邮箱发送邮件！";
+
 }
 
  //发短信代码
@@ -58,20 +58,9 @@ void ServiceMonitor::sendSMSNotification() {
     // 清理资源
     currentReply->deleteLater();
 
-//    //  设置超时定时器
-//    int timeoutDuration = 60000; // 5000毫秒（5秒）超时
-//    timeoutTimer->setSingleShot(true);
-//    timeoutTimer->start(timeoutDuration);
-//    connect(currentReply, &QNetworkReply::finished, this, &ServiceMonitor::handleNetworkReply);
-//    QThread::sleep(60);
 }
 
-//void ServiceMonitor::handleTimeout() {
-//    if (currentReply->isRunning()) {
-//        currentReply->abort();
-//        QMessageBox::critical(m_creator, "错误", "请求超时！");
-//    }
-//}
+
 
 
 void ServiceMonitor::handleNetworkReply() {
@@ -185,13 +174,10 @@ void ServiceMonitor::run()
     if(!flag){
         if(flag_email)
             sendEmail();
-
         if(flag_phone)
         {
             sendSMSNotification();
         }
-
-
         emit end_monitor();
     }
 }
