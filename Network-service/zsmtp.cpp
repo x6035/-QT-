@@ -5,7 +5,7 @@ ZSmtp::ZSmtp(QString serverIP, int port, QObject *parent): QObject(parent)
 {
     this->serverIP = serverIP;
     this->port = port;
-    tcpSocket = new QTcpSocket();
+    tcpSocket = new QTcpSocket;
     connect(tcpSocket, SIGNAL(connected()), this, SLOT(connectToServer()));
     connect(tcpSocket, SIGNAL(disconnected()), this, SLOT(disconnectFromServer()));
     connect(tcpSocket, SIGNAL(readyRead()), this, SLOT(getMessage()));
@@ -34,16 +34,6 @@ void ZSmtp::sendEmail(QString username, QString password, QString to, QString ti
     serverText.clear();
     status = 0;
     tcpSocket->connectToHost(serverIP, port);
-    // 创建一个事件循环
-    QEventLoop loop;
-
-    // 创建一个定时器超时后停止事件循环
-    QTimer::singleShot(10000, &loop, &QEventLoop::quit);
-
-    QObject::connect(tcpSocket, &QTcpSocket::disconnected, &loop, &QEventLoop::quit);
-
-    // 运行事件循环，阻塞当前线程
-    loop.exec();
 }
 
 void ZSmtp::testSmtpService(QString ip,int port)
@@ -141,11 +131,6 @@ void ZSmtp::getMessage()
     }
     else if(status==0 && serverText.indexOf("220")!=-1)
     {
-        if (isTest) {
-            processSmtpServiceTest();
-            isTest = false;
-            return ;
-        }
         //打招呼
         text.append("EHLO ");
         text.append(serverIP.toUtf8());
@@ -153,7 +138,6 @@ void ZSmtp::getMessage()
         status = 1;
     }
     tcpSocket->write(text);
-    //qDebug()<<text;
     emit progress((double)status/STATUS_MAX);   //进度
     if(status == 6)
     {
@@ -162,20 +146,3 @@ void ZSmtp::getMessage()
     }
 }
 
-void ZSmtp::sendEmailSlot(QString username, QString password, QString to, QString title, QString text)
-{
-    sendEmail(username, password, to, title, text);
-}
-
-void ZSmtp::processSmtpServiceTest()
-{
-    if (serverText.startsWith("220")) {
-        qDebug() << "SMTP service is available on" << serverIP;
-        testStatus = true;
-        emit smtpServiceTested(true);
-    } else {
-        qDebug() << "SMTP service is not available or the response is unexpected.";
-        testStatus = false;
-        emit smtpServiceTested(false);
-    }
-}
