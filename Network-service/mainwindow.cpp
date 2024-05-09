@@ -195,6 +195,13 @@ void MainWindow::on_btn_new_task_clicked()
         QMessageBox::critical(this, "错误", "ip或端口不得为空");
         return;
     }
+    //创建一个正则表达式验证端口是否正确
+    QRegularExpression PortRegex("^(?:0|65536|[1-9]\\d{0,4}|[1-5]\\d{0,4}|6[0-4]\\d{0,3}|65[0-4]\\d{0,2}|655[0-2]\\d{0,1}|6553[0-6])$");
+    if(!PortRegex.match(ui->edit_port->text()).hasMatch()){
+        QMessageBox::critical(this, "错误", "输入端口有误！");
+            return ;
+    }
+
 
     int i = 0;
     for (;i<3;)
