@@ -12,6 +12,7 @@
 #include <QEventLoop>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QMainWindow>
 
 class ServiceMonitor : public QThread
 {
@@ -64,8 +65,9 @@ private:
 
 
 private slots:
-//    void handleTimeout();
+
     void handleNetworkReply();
+
 };
 
 #endif // SERVICEMONITOR_H

@@ -4,8 +4,6 @@
 #include <QObject>
 #include <QTcpSocket>
 #include <QDebug>
-#include<QEventLoop>
-#include<QTimer>
 
 #define EMAIL_ERROR     0   //邮件发送失败
 #define EMAIL_SUCCEED   1   //邮件发送成功
@@ -44,10 +42,6 @@ public slots:
     void connectToServer();
     void disconnectFromServer();
     void getMessage();
-
-    void sendEmailSlot(QString username, QString password, QString to, QString title, QString text);
-    // 处理 SMTP 服务测试结果
-    void processSmtpServiceTest();
 
 };
 

@@ -27,19 +27,15 @@ void MainWindow::init()
     {
         monitor_timer[i] = new QTimer;
     }
-  ////////
     connect(monitor_timer[0],&QTimer::timeout,this,[this]() {
         startThread(0);
     });
-  ////////
     connect(monitor_timer[1],&QTimer::timeout,this,[this]() {
         startThread(1);
     });
-  ////////
     connect(monitor_timer[2],&QTimer::timeout,this,[this]() {
         startThread(2);
     });
-
     loghistory = new LogHistory(this,"");
     Create_Logdatabase();
 
@@ -56,7 +52,6 @@ void MainWindow::startThread(int i)
 
 void MainWindow::initConfig()
 {
-//    ui->edit_databasepath->setText(m_settings->value("DatabasePath").toString());
     ui->edit_mail->setText(m_settings->value("ReceiveEmailAddress").toString());
     ui->edit_phone->setText(m_settings->value("PhoneNumber").toString());
     ui->CB_mail->setCheckState(m_settings->value("EmailAddressEnable").toBool()?Qt::Checked:Qt::Unchecked);
@@ -64,7 +59,6 @@ void MainWindow::initConfig()
     ui->edit_appcode->setText(m_settings->value("AppCode").toString());
     ui->edit_mail_send->setText(m_settings->value("SendEmailAddress").toString());
     ui->edit_sendmail_pwd->setText(m_settings->value("SendEmailPwd").toString());
-
     setWidgetEnable(true,0);
     setWidgetEnable(true,1);
     setWidgetEnable(true,2);
@@ -76,7 +70,6 @@ bool MainWindow::saveConfig()
     // 创建一个正则表达式来验证邮箱地址
     QRegularExpression emailRegex("\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\b");
     QRegularExpression phoneRegex("^1[3456789]\\d{9}$");
-
     if(!(ui->CB_mail->isChecked() or ui->CB_phone->isChecked())){
         QMessageBox::critical(this, "错误", "请至少选择一种警报方式！");
         return false;
@@ -93,21 +86,12 @@ bool MainWindow::saveConfig()
             QMessageBox::critical(this, "错误", "手机号有误！");
             return false;
         }
-        if(ui->edit_phone->text().isEmpty()){
-            QMessageBox::critical(this, "错误", "AppCode为空！");
-            return false;
-        }
     }
 
+    if(ui->edit_phone->text().isEmpty()){
+        QMessageBox::critical(this, "错误", "AppCode为空！");
+    }
 
-
-//    QString configPath = ui->edit_databasepath->text();
-//    if (configPath.isEmpty() || !QDir(configPath).exists()) {
-//        QMessageBox::critical(this, "错误", "数据库路径无效，请输入有效路径！");
-//        return false;
-//    }
-
-//    m_settings->setValue("DatabasePath", ui->edit_databasepath->text());
     m_settings->setValue("PhoneNumber", ui->edit_phone->text());
     m_settings->setValue("ReceiveEmailAddress", ui->edit_mail->text());
     m_settings->setValue("PhoneNumberEnable", ui->CB_phone->checkState());
@@ -183,16 +167,6 @@ void MainWindow::on_btn_close_clicked()
 }
 
 
-//void MainWindow::on_pushButton_clicked()
-//{
-//    // 打开文件对话框
-//    QString filePath = QFileDialog::getExistingDirectory(nullptr, "选择数据库存放的路径", QDir::homePath());
-//    // 在此处可以对选择的文件路径进行处理
-//    if (!filePath.isEmpty()) {
-//        qDebug() << "选择的路径为:" << filePath;
-//    }
-//    ui->edit_databasepath->setText(filePath);
-//}
 
 
 void MainWindow::on_CB_mail_stateChanged()
@@ -212,10 +186,18 @@ void MainWindow::on_CB_phone_stateChanged()
 
 void MainWindow::on_btn_new_task_clicked()
 {
+
     if(ui->edit_ip->text().isEmpty()||ui->edit_port->text().isEmpty()) {
         QMessageBox::critical(this, "错误", "ip或端口不得为空");
         return;
     }
+    //创建一个正则表达式验证端口是否正确
+    QRegularExpression PortRegex("^(?:0|65536|[1-9]\\d{0,4}|[1-5]\\d{0,4}|6[0-4]\\d{0,3}|65[0-4]\\d{0,2}|655[0-2]\\d{0,1}|6553[0-6])$");
+    if(!PortRegex.match(ui->edit_port->text()).hasMatch()){
+        QMessageBox::critical(this, "错误", "输入端口有误！");
+            return ;
+    }
+
 
     int i = 0;
     for (;i<3;)
@@ -226,8 +208,8 @@ void MainWindow::on_btn_new_task_clicked()
                                             ui->edit_ip->text(),
                                             ui->edit_port->text(),
                                             i,
-                                            ui->CB_mail->isChecked(),
-                                            ui->CB_phone->isChecked());
+                                            ui->CB_mail->isEnabled(),
+                                            ui->CB_phone->isEnabled());
             switch (i) {
             case 0:
                 ui->task1_disp->setText("");
@@ -314,6 +296,7 @@ void MainWindow::log_display_updata(QString data)
     updata_database(data);
 
 }
+
 
 void MainWindow::displayNotification(QString message,int typ){
     //typ:1=info,0=critical
