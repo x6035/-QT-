@@ -103,7 +103,7 @@
              <string/>
             </property>
             <property name="placeholderText">
-             <string>输入目标主机IP</string>
+             <string>输入目标主机IP或域名</string>
             </property>
            </widget>
           </item>
@@ -336,7 +336,7 @@
      <x>0</x>
      <y>0</y>
      <width>780</width>
-     <height>25</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>

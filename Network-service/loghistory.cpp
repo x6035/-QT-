@@ -28,7 +28,7 @@ void LogHistory::on_btn_clear_clicked()
     db.setDatabaseName(dbPath);  // 数据库文件路径
 
     if (!db.open()) {
-        qDebug() << "无法打开数据库";
+        qDebug() << "Cant open database！";
     }
 
     QSqlQuery clearQuery(db);

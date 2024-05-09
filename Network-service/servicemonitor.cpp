@@ -1,25 +1,17 @@
 #include "servicemonitor.h"
-#include "ui_mainwindow.h"
+
 
 void ServiceMonitor::sendEmail()
 {
+    QSettings settings("config.ini", QSettings::IniFormat);
 
-
-        QSettings settings("config.ini", QSettings::IniFormat);
-        // 创建一个事件循环
-        QEventLoop loop;
-        // 创建一个定时器，在40秒后停止事件循环
-        QTimer::singleShot(40000, &loop, &QEventLoop::quit);
-        ZSmtp smtp;//默认是qq邮箱服务器，想用别的服务器就 new ZSmtp(Smtp服务器地址)
-        QObject::connect(&smtp, &ZSmtp::disconnected, &loop, &QEventLoop::quit);
-        //发送完毕自行销毁
-        smtp.sendEmail(settings.value("SendEmailAddress").toString(),
-                       settings.value("SendEmailPwd").toString(),
-                       settings.value("ReceiveEmailAddress").toString(),
-                       "警告", "您所监测的服务终止！");  //qq邮箱需要授权码 自己设置
-        emit SendNotification("您所监测的服务异常，已向邮箱发送邮件！",1);
-        // 运行事件循环，阻塞当前线程
-        loop.exec();
+    ZSmtp *smtp = new ZSmtp;//默认是qq邮箱服务器，想用别的服务器就 new ZSmtp(Smtp服务器地址)
+    connect(smtp, SIGNAL(disconnected()), smtp, SLOT(deleteLater()));	//发送完毕自行销毁
+    smtp->sendEmail(settings.value("SendEmailAddress").toString(),
+                    settings.value("SendEmailPwd").toString(),
+                    settings.value("ReceiveEmailAddress").toString(),
+                    "警告", "您所监测的服务终止！");
+    emit SendNotification("您所监测的服务异常，已向邮箱发送邮件！",1);
 
 }
 
@@ -28,9 +20,9 @@ void ServiceMonitor::sendSMSNotification() {
 
     QSettings settings("config.ini", QSettings::IniFormat);
 
-    // 读取"appcode"对应的值
+    // 读取值
     QString appcode = settings.value("AppCode").toString();
-    QString mobile = settings.value("PhoneNumber").toString(); // 替换为您要发送短信的手机号码
+    QString mobile = settings.value("PhoneNumber").toString();
 
     // 设置请求参数
 
@@ -56,6 +48,7 @@ void ServiceMonitor::sendSMSNotification() {
 
     // 连接reply的finished()信号和定时器的超时信号到事件循环的退出槽
     QObject::connect(currentReply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
+//    QObject::connect(&loop, &QEventLoop::quit, this, &ServiceMonitor::quit);
 
     // 运行事件循环，阻塞当前线程
     loop.exec();
@@ -65,6 +58,9 @@ void ServiceMonitor::sendSMSNotification() {
     // 清理资源
     currentReply->deleteLater();
 }
+
+
+
 
 void ServiceMonitor::handleNetworkReply() {
 
@@ -78,6 +74,7 @@ void ServiceMonitor::handleNetworkReply() {
         int code = jsonObject["error_code"].toInt();
         if (code == 0) {
             emit SendNotification("服务异常，已向手机发送短信！",1);
+//            qDebug() << "服务异常，已向手机发送短信！";
         } else {
             qDebug() << "短信发送失败，错误码";
             emit SendNotification("短信发送失败，错误码："+ QString::number(code) + '\n' + "错误信息："+\
@@ -176,13 +173,10 @@ void ServiceMonitor::run()
     if(!flag){
         if(flag_email)
             sendEmail();
-
         if(flag_phone)
         {
             sendSMSNotification();
         }
-
-
-        //emit end_monitor();
+        emit end_monitor();
     }
 }

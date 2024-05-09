@@ -30,6 +30,7 @@ public:
 
     Ui::MainWindow *ui;
 
+
 private slots:
     void on_btn_enter_clicked();
 
@@ -42,6 +43,8 @@ private slots:
     void on_btn_CancelConfig_clicked();
 
     void on_btn_close_clicked();
+
+//    void on_pushButton_clicked();
 
     void on_CB_mail_stateChanged();
 

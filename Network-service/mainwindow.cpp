@@ -27,15 +27,19 @@ void MainWindow::init()
     {
         monitor_timer[i] = new QTimer;
     }
+  ////////
     connect(monitor_timer[0],&QTimer::timeout,this,[this]() {
         startThread(0);
     });
+  ////////
     connect(monitor_timer[1],&QTimer::timeout,this,[this]() {
         startThread(1);
     });
+  ////////
     connect(monitor_timer[2],&QTimer::timeout,this,[this]() {
         startThread(2);
     });
+
     loghistory = new LogHistory(this,"");
     Create_Logdatabase();
 
@@ -59,6 +63,7 @@ void MainWindow::initConfig()
     ui->edit_appcode->setText(m_settings->value("AppCode").toString());
     ui->edit_mail_send->setText(m_settings->value("SendEmailAddress").toString());
     ui->edit_sendmail_pwd->setText(m_settings->value("SendEmailPwd").toString());
+
     setWidgetEnable(true,0);
     setWidgetEnable(true,1);
     setWidgetEnable(true,2);
@@ -70,6 +75,7 @@ bool MainWindow::saveConfig()
     // 创建一个正则表达式来验证邮箱地址
     QRegularExpression emailRegex("\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\b");
     QRegularExpression phoneRegex("^1[3456789]\\d{9}$");
+
     if(!(ui->CB_mail->isChecked() or ui->CB_phone->isChecked())){
         QMessageBox::critical(this, "错误", "请至少选择一种警报方式！");
         return false;
@@ -86,11 +92,12 @@ bool MainWindow::saveConfig()
             QMessageBox::critical(this, "错误", "手机号有误！");
             return false;
         }
+        if(ui->edit_phone->text().isEmpty()){
+            QMessageBox::critical(this, "错误", "AppCode为空！");
+            return false;
+        }
     }
 
-    if(ui->edit_phone->text().isEmpty()){
-        QMessageBox::critical(this, "错误", "AppCode为空！");
-    }
 
     m_settings->setValue("PhoneNumber", ui->edit_phone->text());
     m_settings->setValue("ReceiveEmailAddress", ui->edit_mail->text());
@@ -167,8 +174,6 @@ void MainWindow::on_btn_close_clicked()
 }
 
 
-
-
 void MainWindow::on_CB_mail_stateChanged()
 {
     ui->edit_mail->setEnabled(ui->CB_mail->isChecked());
@@ -186,30 +191,22 @@ void MainWindow::on_CB_phone_stateChanged()
 
 void MainWindow::on_btn_new_task_clicked()
 {
-
     if(ui->edit_ip->text().isEmpty()||ui->edit_port->text().isEmpty()) {
         QMessageBox::critical(this, "错误", "ip或端口不得为空");
         return;
     }
-    //创建一个正则表达式验证端口是否正确
-    QRegularExpression PortRegex("^(?:0|65536|[1-9]\\d{0,4}|[1-5]\\d{0,4}|6[0-4]\\d{0,3}|65[0-4]\\d{0,2}|655[0-2]\\d{0,1}|6553[0-6])$");
-    if(!PortRegex.match(ui->edit_port->text()).hasMatch()){
-        QMessageBox::critical(this, "错误", "输入端口有误！");
-            return ;
-    }
-
 
     int i = 0;
     for (;i<3;)
     {
         if (monitor_check[i] == 0)
         {
-            monitor[i] = new ServiceMonitor(this,ui->comboBox->currentIndex(),
+            monitor[i] = new ServiceMonitor(ui->comboBox->currentIndex(),
                                             ui->edit_ip->text(),
                                             ui->edit_port->text(),
                                             i,
-                                            ui->CB_mail->isEnabled(),
-                                            ui->CB_phone->isEnabled());
+                                            ui->CB_mail->isChecked(),
+                                            ui->CB_phone->isChecked());
             switch (i) {
             case 0:
                 ui->task1_disp->setText("");
@@ -297,7 +294,6 @@ void MainWindow::log_display_updata(QString data)
 
 }
 
-
 void MainWindow::displayNotification(QString message,int typ){
     //typ:1=info,0=critical
     if(typ)
@@ -338,10 +334,10 @@ void MainWindow::updata_database(QString data)
     QString dbPath = "LogHistory.db"; // 数据库文件名
 
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName(dbPath);  // 使用内存数据库，你可以改为你的数据库文件路径
+    db.setDatabaseName(dbPath);  // 使用内存数据库
 
     if (!db.open()) {
-        qDebug() << "无法打开数据库";
+        qDebug() << "Cant open database！";
     }
     QSqlQuery query(db);
 
@@ -353,13 +349,12 @@ void MainWindow::updata_database(QString data)
     query.addBindValue(parts[3]);
     bool flag_insert = query.exec();
 
-    // Check if the query execution was successful
     if (!flag_insert) {
         qDebug() << "Error inserting data into table:" << query.lastError();
         return;
     }
 
-    db.close(); // Close the database connection
+    db.close(); // 关闭数据库连接
 }
 
 //读取数据库
@@ -371,7 +366,7 @@ void MainWindow::on_btn_openlog_clicked()
     db.setDatabaseName(dbPath);  // 数据库文件路径
 
     if (!db.open()) {
-        qDebug() << "无法打开数据库";
+        qDebug() << "Cant open database！";
     }
 
 
