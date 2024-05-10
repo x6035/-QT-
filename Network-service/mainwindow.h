@@ -66,6 +66,7 @@ private slots:
 
     void displayNotification(QString,int);
 
+    void Create_Logdatabase();
 private:
     void init();
     void initConfig();
@@ -81,7 +82,7 @@ private:
     int monitor_check[3] = {0,0,0};
     LogHistory *loghistory;
 
-    void Create_Logdatabase();
+
     void updata_database(QString data);
 
 

@@ -26,7 +26,7 @@ private slots:
 
     void on_btn_clear_clicked();
 
-private:
+
 
 };
 

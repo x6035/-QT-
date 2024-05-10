@@ -23,6 +23,7 @@ void MainWindow::init()
     //读取根目录下的ini文件
     m_settings = new QSettings("config.ini", QSettings::IniFormat);
     initConfig();
+
     for (int i=0;i<3;i++)
     {
         monitor_timer[i] = new QTimer;
@@ -367,6 +368,7 @@ void MainWindow::updata_database(QString data)
 //读取数据库
 void MainWindow::on_btn_openlog_clicked()
 {
+    Create_Logdatabase();
     QString dbPath = "LogHistory.db"; // 数据库文件名
 
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");

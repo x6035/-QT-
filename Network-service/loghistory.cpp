@@ -22,6 +22,7 @@ void LogHistory::on_btn_back_clicked()
 
 void LogHistory::on_btn_clear_clicked()
 {
+
     QString dbPath = "LogHistory.db"; // 数据库文件名
 
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
