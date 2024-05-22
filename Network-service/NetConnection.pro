@@ -1,4 +1,4 @@
-QT       += core gui network widgets sql
+QT       += core gui network widgets sql core5compat
 
 
 CONFIG += c++17
@@ -8,6 +8,8 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    display_label.cpp \
+    end_btn.cpp \
     loghistory.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -15,8 +17,12 @@ SOURCES += \
     zsmtp.cpp
 
 HEADERS += \
+    dbconnectionpool.h \
+    display_label.h \
+    end_btn.h \
     loghistory.h \
     mainwindow.h \
+    monitor_timer.h \
     servicemonitor.h \
     zsmtp.h
 

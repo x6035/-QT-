@@ -8,6 +8,9 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     init();
+    ScrollContentWidget = new QWidget(ui->scrollArea);
+    ScrollContentLayout  = new QVBoxLayout(ScrollContentWidget);
+    ui->scrollArea->setWidget(ScrollContentWidget);
 }
 
 MainWindow::~MainWindow()
@@ -24,34 +27,17 @@ void MainWindow::init()
     m_settings = new QSettings("config.ini", QSettings::IniFormat);
     initConfig();
 
-    for (int i=0;i<3;i++)
-    {
-        monitor_timer[i] = new QTimer;
-    }
-  ////////
-    connect(monitor_timer[0],&QTimer::timeout,this,[this]() {
-        startThread(0);
-    });
-  ////////
-    connect(monitor_timer[1],&QTimer::timeout,this,[this]() {
-        startThread(1);
-    });
-  ////////
-    connect(monitor_timer[2],&QTimer::timeout,this,[this]() {
-        startThread(2);
-    });
-
     loghistory = new LogHistory(this,"");
     Create_Logdatabase();
 
 }
 
-void MainWindow::startThread(int i)
+void MainWindow::startThread(int id)
 {
-
-    if (!monitor[i]->isRunning())
+    QLinkedList<ServiceMonitor*>::iterator i_monitor = getIteratorAtIndex(monitors,id-1);
+    if (!(*i_monitor)->isRunning())
     {
-        monitor[i]->start();
+        (*i_monitor)->start();
     }
 }
 
@@ -65,9 +51,7 @@ void MainWindow::initConfig()
     ui->edit_mail_send->setText(m_settings->value("SendEmailAddress").toString());
     ui->edit_sendmail_pwd->setText(m_settings->value("SendEmailPwd").toString());
 
-    setWidgetEnable(true,0);
-    setWidgetEnable(true,1);
-    setWidgetEnable(true,2);
+//    setWidgetEnable(true);
 
 }
 
@@ -116,21 +100,10 @@ bool MainWindow::saveConfig()
     return true;
 }
 
-void MainWindow::setWidgetEnable(bool flag,int which_monitor)
+void MainWindow::setWidgetEnable(bool flag)
 {
     ui->confBtn->setEnabled(flag);
     ui->btn_back->setEnabled(flag);
-    switch (which_monitor) {
-    case 0:
-        ui->end_task1->setEnabled(!flag);
-        break;
-    case 1:
-        ui->end_task2->setEnabled(!flag);
-        break;
-    case 2:
-        ui->end_task3->setEnabled(!flag);
-        break;
-}
 
 }
 
@@ -200,106 +173,148 @@ void MainWindow::on_btn_new_task_clicked()
     QRegularExpression PortRegex("^(?:0|65536|[1-9]\\d{0,4}|[1-5]\\d{0,4}|6[0-4]\\d{0,3}|65[0-4]\\d{0,2}|655[0-2]\\d{0,1}|6553[0-6])$");
     if(!PortRegex.match(ui->edit_port->text()).hasMatch()){
         QMessageBox::critical(this, "错误", "输入端口有误！");
-            return ;
+        return ;
     }
 
+    display_unit_cout++;
+    display_label *newLabel = new display_label(this,display_unit_cout);
+    end_btn *newBtn = new end_btn(display_unit_cout);
+    connect(newBtn,SIGNAL(sendid(int)),this,SLOT(end_task(int)));
 
-    int i = 0;
-    for (;i<3;)
+    Monitor_Timer *timer = new Monitor_Timer(this,display_unit_cout);
+    monitor_timers.append(timer);
+    connect(timer,&QTimer::timeout,this,[this, timer]() {
+        startThread(timer->id);
+    });
+
+
+
+    QHBoxLayout *scrollLayout = new QHBoxLayout();
+    scrollLayout->addWidget(newLabel);
+    scrollLayout->addWidget(newBtn);
+
+    ScrollContentLayout->addLayout(scrollLayout);
+
+
+    // 将新的QLabel添加到数组中
+    display_labels.append(newLabel);
+    end_btns.append(newBtn);
+
+    monitors.append(new ServiceMonitor(ui->comboBox->currentIndex(),
+                                         ui->edit_ip->text(),
+                                         ui->edit_port->text(),
+                                         display_unit_cout,
+                                         ui->CB_mail->isChecked(),
+                                       ui->CB_phone->isChecked()));
+    QLinkedList<ServiceMonitor*>::iterator i_monitor = getIteratorAtIndex(monitors,display_unit_cout-1);
+
+    connect(*i_monitor, SIGNAL(send_data(QString,int)), this, SLOT(log_display_updata(QString,int)));
+
+    connect(*i_monitor, SIGNAL(end_monitor()), newBtn, SLOT(on_end_btn_clicked()));
+    //暂时不确定id需要
+
+    newLabel->setText("初始化任务中......");
+
+    connect(*i_monitor, SIGNAL(SendNotification(QString,int)),
+            this, SLOT(displayNotification(QString,int)), Qt::QueuedConnection);
+
+    (timer)->start(5000); //5s监视一次，给网络预留时间
+    setWidgetEnable(false);
+    monitor_checks.append(1);
+
+
+}
+
+
+//链表遍历模板
+template<typename T>
+typename QLinkedList<T>::iterator MainWindow::getIteratorAtIndex(QLinkedList<T>& list, int index) {
+    typename QLinkedList<T>::iterator it = list.begin();
+    for (int i = 0; i < index && it != list.end(); ++i) {
+            ++it;
+    }
+    return it;
+}
+
+//链表节点删除后更新id
+template<typename NodeType>
+void MainWindow::updateNodeIds(QLinkedList<NodeType*>& list, int startId)
+{
+    for (typename QLinkedList<NodeType*>::iterator it = list.begin(); it != list.end(); ++it)
     {
-        if (monitor_check[i] == 0)
-        {
-            monitor[i] = new ServiceMonitor(ui->comboBox->currentIndex(),
-                                            ui->edit_ip->text(),
-                                            ui->edit_port->text(),
-                                            i,
-                                            ui->CB_mail->isChecked(),
-                                            ui->CB_phone->isChecked());
-            switch (i) {
-            case 0:
-                ui->task1_disp->setText("");
-                break;
-            case 1:
-                ui->task2_disp->setText("");
-                break;
-            case 2:
-                ui->task3_disp->setText("");
-                break;
+            if ((*it)->id >= startId)
+            {
+            (*it)->id = startId--;
             }
-
-            connect(monitor[i], SIGNAL(send_data(QString)), this, SLOT(log_display_updata(QString)));
-            connect(monitor[i], SIGNAL(SendNotification(QString,int)),
-                    this, SLOT(displayNotification(QString,int)), Qt::QueuedConnection);
-            switch (i) {
-            case 0:
-                connect(monitor[i], SIGNAL(end_monitor()), this, SLOT(on_end_task1_clicked()));
-                break;
-            case 1:
-                connect(monitor[i], SIGNAL(end_monitor()), this, SLOT(on_end_task2_clicked()));
-                break;
-            case 2:
-                connect(monitor[i], SIGNAL(end_monitor()), this, SLOT(on_end_task3_clicked()));
-                break;
-            }
-
-            monitor_timer[i]->start(5000); //5s监视一次，给网络预留时间
-            setWidgetEnable(false,i);
-            monitor_check[i] = 1;
-            break;
-        }
-        else
-        {
-            i++;
-        }
-
-        if(i == 3)
-        {
-            QMessageBox::critical(this, "错误", "任务列表已满！");
-        }
     }
-
 }
 
 
-void MainWindow::on_end_task1_clicked()
+//改进：设置label 和 按钮 销毁，计时器检查
+void MainWindow::end_task(int id)
 {
-    setWidgetEnable(true,0);
-    monitor_check[0] = 0;
-    monitor_timer[0]->stop();
+
+    //id-1 = index
+    int index = id -1;
+    QLinkedList<int>::iterator i_monitor_check = getIteratorAtIndex(monitor_checks,index);
+    i_monitor_check = 0;
+
+    QLinkedList<Monitor_Timer*>::iterator i_monitor_timer = getIteratorAtIndex(monitor_timers,index);
+
+    if (i_monitor_timer != monitor_timers.end()) {
+        // 假设元素是指针类型，需要手动删除
+        (*i_monitor_timer)->stop();
+        delete *i_monitor_timer;
+        monitor_timers.erase(i_monitor_timer);
+    }
+    updateNodeIds(monitor_timers,id);
+
+    //组件销毁，加从链表移除
+    //label
+    QLinkedList<display_label*>::iterator i_display_label = getIteratorAtIndex(display_labels,index);
+    // 从布局中移除小部件
+    ui->display_unit->removeWidget(*i_display_label);
+    // 销毁小部件
+    delete *i_display_label;
+    // 从链表中移除
+    display_labels.erase(i_display_label);
+    updateNodeIds(display_labels,id);
+
+    //btn
+    QLinkedList<end_btn*>::iterator i_end_btn = getIteratorAtIndex(end_btns,index);
+    // 从布局中移除小部件
+    ui->display_unit->removeWidget(*i_end_btn);
+    // 销毁小部件
+    delete *i_end_btn;
+    // 从链表中移除
+    end_btns.erase(i_end_btn);
+    updateNodeIds(end_btns,id);
+
+    //线程
+    QLinkedList<ServiceMonitor*>::iterator i_servicemonitor = getIteratorAtIndex(monitors,index);
+    // 销毁小部件
+    delete *i_servicemonitor;
+    // 从链表中移除
+    monitors.erase(i_servicemonitor);
+
+    updateNodeIds(display_labels,id);
+
+    display_unit_cout--;
+
+    if(!display_unit_cout)
+        setWidgetEnable(true);
 }
 
 
-void MainWindow::on_end_task2_clicked()
-{
-    setWidgetEnable(true,1);
-    monitor_check[1] = 0;
-    monitor_timer[1]->stop();
-}
 
 
-void MainWindow::on_end_task3_clicked()
+void MainWindow::log_display_updata(QString data,int id)
 {
-    setWidgetEnable(true,2);
-    monitor_check[2] = 0;
-    monitor_timer[2]->stop();
-}
-
-void MainWindow::log_display_updata(QString data)
-{
-    int id = data.mid(0, 1).toInt();
-    switch (id) {
-    case 0:
-        ui->task1_disp->append(data.mid(2,-1));
-        break;
-    case 1:
-        ui->task2_disp->append(data.mid(2,-1));
-        break;
-    case 2:
-        ui->task3_disp->append(data.mid(2,-1));
-        break;
+    QLinkedList<display_label*>::iterator i_display_label = getIteratorAtIndex(display_labels,id-1);
+    if (i_display_label != display_labels.end()) {
+        (*i_display_label)->setText(data.mid(2,-1));
     }
     updata_database(data);
-
 }
 
 void MainWindow::displayNotification(QString message,int typ){
@@ -313,12 +328,12 @@ void MainWindow::displayNotification(QString message,int typ){
 //数据库初始化
 void MainWindow::Create_Logdatabase()
 {
+    QSqlDatabase db = DbConnectionPool::getInstance().getConnection();
     QString dbPath = "LogHistory.db"; // 数据库文件名
-
     // 检查数据库是否存在
     if (!QFile::exists(dbPath)) {
         // 创建数据库
-        QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+        db = QSqlDatabase::addDatabase("QSQLITE");
         db.setDatabaseName(dbPath);
         if (!db.open()) {
             qDebug() << "Error creating database:" << db.lastError();
@@ -333,15 +348,14 @@ void MainWindow::Create_Logdatabase()
             return;
         }
 
-        db.close(); // 关闭数据库
+        DbConnectionPool::getInstance().releaseConnection(db); // 关闭数据库
     }
 }
 
 void MainWindow::updata_database(QString data)
 {
     QString dbPath = "LogHistory.db"; // 数据库文件名
-
-    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+    QSqlDatabase db = DbConnectionPool::getInstance().getConnection();
     db.setDatabaseName(dbPath);  // 使用内存数据库
 
     if (!db.open()) {
@@ -362,16 +376,15 @@ void MainWindow::updata_database(QString data)
         return;
     }
 
-    db.close(); // 关闭数据库连接
+    DbConnectionPool::getInstance().releaseConnection(db); // 关闭数据库
 }
 
 //读取数据库
 void MainWindow::on_btn_openlog_clicked()
 {
     Create_Logdatabase();
+    QSqlDatabase db = DbConnectionPool::getInstance().getConnection();
     QString dbPath = "LogHistory.db"; // 数据库文件名
-
-    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName(dbPath);  // 数据库文件路径
 
     if (!db.open()) {
@@ -396,8 +409,30 @@ void MainWindow::on_btn_openlog_clicked()
         res_data = res_data.append(output+"\n");
 
     }
-    db.close();
+    DbConnectionPool::getInstance().releaseConnection(db);
     loghistory = new LogHistory(this,res_data);
     loghistory->show();
+}
+
+template <typename T>
+void MainWindow::insertNode(QLinkedList<T>& list, int index, const T& data) {
+    if (index < 0 || index > list.size()) {
+        return;
+    }
+
+    auto it = list.begin();
+    std::advance(it, index);
+    list.insert(it, data);
+}
+
+template <typename T>
+void MainWindow::removeNode(QLinkedList<T>& list, int index) {
+    if (index < 0 || index >= list.size()) {
+        return;
+    }
+
+    auto it = list.begin();
+    std::advance(it, index);
+    list.erase(it);
 }
 

@@ -166,7 +166,7 @@ void ServiceMonitor::run()
     QString currentDateTimeString = currentDateTime.toString("yyyy-MM-dd-hh:mm:ss");
 
     //写日志等操作
-    emit send_data(QString::number(id,10)+"  "+currentDateTimeString+"  "+ip+":"+port+"  "+flag_des);
+    emit send_data(QString::number(id,10)+"  "+currentDateTimeString+"  "+ip+":"+port+"  "+flag_des,id);
 
 
     qDebug()<<flag;

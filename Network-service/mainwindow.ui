@@ -88,41 +88,30 @@
       </widget>
       <widget class="QWidget" name="page_2">
        <layout class="QGridLayout" name="gridLayout_3">
+        <item row="9" column="0">
+         <spacer name="verticalSpacer_3">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="10" column="0" colspan="2">
+         <widget class="QPushButton" name="btn_back">
+          <property name="text">
+           <string>返回</string>
+          </property>
+         </widget>
+        </item>
         <item row="3" column="0" colspan="2">
          <widget class="QPushButton" name="btn_new_task">
           <property name="text">
            <string>新建监测</string>
-          </property>
-         </widget>
-        </item>
-        <item row="5" column="0" colspan="2">
-         <layout class="QHBoxLayout" name="horizontalLayout_2">
-          <item>
-           <widget class="QLineEdit" name="edit_ip">
-            <property name="text">
-             <string/>
-            </property>
-            <property name="placeholderText">
-             <string>输入目标主机IP或域名</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLineEdit" name="edit_port">
-            <property name="text">
-             <string/>
-            </property>
-            <property name="placeholderText">
-             <string>输入目标服务PORT</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item row="9" column="0" colspan="2">
-         <widget class="QPushButton" name="btn_back">
-          <property name="text">
-           <string>返回</string>
           </property>
          </widget>
         </item>
@@ -141,39 +130,12 @@
           </property>
          </widget>
         </item>
-        <item row="7" column="0" colspan="2">
-         <layout class="QGridLayout" name="gridLayout_5">
-          <item row="1" column="1">
-           <widget class="QPushButton" name="end_task2">
-            <property name="text">
-             <string>终止</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QTextBrowser" name="task2_disp"/>
-          </item>
-          <item row="0" column="0">
-           <widget class="QTextBrowser" name="task1_disp"/>
-          </item>
-          <item row="1" column="2">
-           <widget class="QPushButton" name="end_task3">
-            <property name="text">
-             <string>终止</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QPushButton" name="end_task1">
-            <property name="text">
-             <string>终止</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="2">
-           <widget class="QTextBrowser" name="task3_disp"/>
-          </item>
-         </layout>
+        <item row="9" column="1">
+         <widget class="QPushButton" name="btn_openlog">
+          <property name="text">
+           <string>历史记录</string>
+          </property>
+         </widget>
         </item>
         <item row="2" column="0">
          <widget class="QPushButton" name="confBtn">
@@ -201,25 +163,46 @@
           </item>
          </widget>
         </item>
-        <item row="8" column="0">
-         <spacer name="verticalSpacer_3">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
+        <item row="8" column="0" colspan="2">
+         <widget class="QScrollArea" name="scrollArea">
+          <property name="widgetResizable">
+           <bool>true</bool>
           </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item row="8" column="1">
-         <widget class="QPushButton" name="btn_openlog">
-          <property name="text">
-           <string>历史记录</string>
-          </property>
+          <widget class="QWidget" name="scrollAreaWidgetContents">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>742</width>
+             <height>130</height>
+            </rect>
+           </property>
+          </widget>
          </widget>
+        </item>
+        <item row="5" column="0" colspan="2">
+         <layout class="QHBoxLayout" name="display_unit">
+          <item>
+           <widget class="QLineEdit" name="edit_ip">
+            <property name="text">
+             <string/>
+            </property>
+            <property name="placeholderText">
+             <string>输入目标主机IP或域名</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="edit_port">
+            <property name="text">
+             <string/>
+            </property>
+            <property name="placeholderText">
+             <string>输入目标服务PORT</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
        </layout>
       </widget>

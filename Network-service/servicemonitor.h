@@ -32,7 +32,7 @@ public:
 
 signals:
     void end_monitor();
-    void send_data(QString log);
+    void send_data(QString log,int);
     //typ:1警报，2：提示
     void SendNotification(QString,int typ);
 
