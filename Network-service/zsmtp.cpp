@@ -9,6 +9,7 @@ ZSmtp::ZSmtp(QString serverIP, int port, QObject *parent): QObject(parent)
     connect(tcpSocket, SIGNAL(connected()), this, SLOT(connectToServer()));
     connect(tcpSocket, SIGNAL(disconnected()), this, SLOT(disconnectFromServer()));
     connect(tcpSocket, SIGNAL(readyRead()), this, SLOT(getMessage()));
+    this->status = 0;
     qDebug()<<"ZSmtp";
 }
 
